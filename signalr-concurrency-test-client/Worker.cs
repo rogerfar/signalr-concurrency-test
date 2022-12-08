@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace signalr_concurrency_test_client;
 
@@ -14,6 +15,14 @@ internal class Worker : IHostedService
     {
         var hubConnection = new HubConnectionBuilder()
             .WithUrl("http://localhost:5194/Chat")
+            .ConfigureLogging(logging =>
+            {
+                // Log to the Console
+                logging.AddConsole();
+
+                // This will set ALL logging to Debug level
+                logging.SetMinimumLevel(LogLevel.Debug);
+            })
             .Build();
 
         hubConnection.On("Test1",  () =>
